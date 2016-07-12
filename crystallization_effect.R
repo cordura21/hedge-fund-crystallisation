@@ -12,7 +12,7 @@ aums$high.watermark<- as.double(params$aum)
 aums$last.period.aum <- as.double(params$aum)
 params$returns <- as.numeric(params$returns)
 params$returns <- (1+ params$returns) ^ (1 / params$payments_in_each_period) -1
-params$returns <- c(rep(params$returns,params$payments_in_each_period))
+params$returns <- c(rep(params$returns,each = params$payments_in_each_period))
 # For Debugging
 iLoop <- 1
 
