@@ -1,0 +1,13 @@
+aum: 100
+crystallise: false
+performance_fee: 0.14
+management_fee: 0.007
+payments_in_each_period: 2
+returns:
+  - .08
+  - .08
+  - .08
+  - -.08
+  - .20
+ 
+ 
