@@ -45,8 +45,8 @@ for (iLoop in 1:length(params$returns)) {
   # Calculate aum before fees
   aums$gross_before_fees <- aums$starting.period.aum + aums$current_pnl
   # aum after management fee
-  aums$management_fee <- mean(aums$starting.period.aum,
-                              aums$gross_before_fee) * params$management_fee
+  aums$management_fee <- ((aums$starting.period.aum+aums$gross_before_fee) / 2) *
+    params$management_fee
   
   aums$after_management_fee <- aums$gross_before_fee - aums$management_fee
   
@@ -65,7 +65,6 @@ for (iLoop in 1:length(params$returns)) {
   } else {
     aums$performance_fee <- 0
     aums$high.watermark <- aums$high.watermark
-    
   }
   
   aums$net_of_everything <-
@@ -77,4 +76,22 @@ for (iLoop in 1:length(params$returns)) {
 
 library(data.table)
 historical_results <- rbindlist(aums_hist, fill = TRUE)
+
 View(historical_results)
+
+# Calculate direct net performance, with crystallization at the end
+# ec = end crystallization
+ec <- list()
+# Create a profit factor for each period,
+# less the management fee. I think
+# it is a valid approximation
+
+write.csv(historical_results,file.path('results','results.csv'))
+ec$period_return <- (1 + (params$returns - params$management_fee))
+ec$cum_return <- prod(ec$period_return)
+# hasta acá estoy bien
+ec$final_aum_gross <- params$aum * ec$cum_return
+ec$pnl <- ec$final_aum_gross - params$aum
+ec$perf_fee <- ifelse(ec$pnl < 0,0, ec$pnl * params$performance_fee)
+ec$final_aum_net <- ifelse(ec$perf_fee == 0, ec$final_aum_gross,ec$final_aum_gross - ec$perf_fee )
+ec
