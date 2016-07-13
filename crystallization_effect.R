@@ -94,4 +94,19 @@ ec$final_aum_gross <- params$aum * ec$cum_return
 ec$pnl <- ec$final_aum_gross - params$aum
 ec$perf_fee <- ifelse(ec$pnl < 0,0, ec$pnl * params$performance_fee)
 ec$final_aum_net <- ifelse(ec$perf_fee == 0, ec$final_aum_gross,ec$final_aum_gross - ec$perf_fee )
-ec
+
+print('Final AUM with end of contract crystallization:')
+print(historical_results$end.period.aum[NROW(historical_results)])
+
+print('Final AUM WITHOUT crystallization:')
+print(ec$final_aum_net)
+
+
+print('Difference:')
+print(historical_results$end.period.aum[NROW(historical_results)] - ec$final_aum_net)
+
+
+
+
+
+
